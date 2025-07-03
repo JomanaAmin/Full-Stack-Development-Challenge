@@ -12,4 +12,7 @@ public class Product {
         this("Unnamed",0.0,0);
     } //just made this no arg constructor but it wont be used
 
+    public void decrementQuantity(){
+        this.quantity--;
+    }
 }

@@ -20,4 +20,9 @@ public class ExpirableProduct extends Product implements Expirable{
     public LocalDate getExpiryDate(){
         return expiryDate;
     }
+
+    public boolean isExpired(){
+        LocalDate currTime=LocalDate.now();
+        return currTime.isAfter(this.expiryDate);
+    }
 }
