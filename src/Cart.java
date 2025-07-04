@@ -55,18 +55,19 @@ public class Cart {
         }
     }
 
-    public void remove(Product product) throws IllegalStateException{
+    public void remove(Product product) {
         if (!cartItems.containsKey(product)){
-            throw new IllegalStateException("Product is not in cart.");
+            System.out.println("Product is not in cart.");
+            return;
         }
         cartItems.remove(product);
         product.incrementQuantity(1);
-
-
     }
-    public void remove(Product product,Integer quantity) throws IllegalStateException{
+
+    public void remove(Product product,Integer quantity) {
         if (!cartItems.containsKey(product)){
-            throw new IllegalStateException("Product is not in cart.");
+            System.out.println("Product is not in cart.");
+            return;
         }
         Integer oldQuantity=cartItems.get(product);
         if((oldQuantity-quantity)<0){

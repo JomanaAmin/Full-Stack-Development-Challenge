@@ -52,12 +52,12 @@ public class Product {
         return expiryDate;
     }
     public void decrementQuantity() throws IllegalStateException{
-        if (quantity <= 0)
+        if (quantity < 0)
             throw new IllegalStateException("Product is sold out.");
         quantity--;
     }
     public void decrementQuantity(Integer quantity) throws IllegalStateException{
-        if ((this.quantity-quantity) <= 0)
+        if ((this.quantity-quantity) < 0)
             throw new IllegalStateException("Quantity entered exceeds amount of "+this.name+" in stock.");
         this.quantity-=quantity;
     }
@@ -65,8 +65,7 @@ public class Product {
     public boolean isExpired() {
         return expirable && expiryDate != null && LocalDate.now().isAfter(expiryDate);
     }
-    public void incrementQuantity(Integer quantity) throws IllegalStateException{
-
+    public void incrementQuantity(Integer quantity){
         this.quantity+=quantity;
     }
 }
