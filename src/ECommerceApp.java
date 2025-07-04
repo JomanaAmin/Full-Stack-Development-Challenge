@@ -4,7 +4,7 @@ import java.time.LocalDate;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class ECommerceApp {
     public static void main(String[] args) {
-        Customer customer1=new Customer("Jomana",2);
+        Customer customer1=new Customer("Jomana",200);
         Customer customer2=new Customer("Hussein",200);
 
 
@@ -29,7 +29,7 @@ public class ECommerceApp {
         customer2.getCart().add(charger);
         customer2.checkout();
 
-        customer1.checkout();
+
 
 
     }
