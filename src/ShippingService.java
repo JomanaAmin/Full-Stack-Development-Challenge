@@ -33,7 +33,7 @@ public class ShippingService {
     }
 
     public double getShippingFee(){
-        this.shippingFee=this.getTotalWeight()*2.35;
+        this.shippingFee=this.getTotalWeight()*1.35;
         return this.shippingFee;
     }
 

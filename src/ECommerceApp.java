@@ -22,11 +22,11 @@ public class ECommerceApp {
         customer1.getCart().remove(milk,2);
         customer1.getCart().add(charger,1);
         customer1.checkout();
-
-        customer2.getCart().add(cheese,2);
-        customer2.checkout();
-
         customer2.getCart().add(charger);
+
+        customer2.checkout();
+        customer2.getCart().add(cheese,2);
+
         customer2.checkout();
 
 

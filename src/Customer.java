@@ -68,26 +68,28 @@ public class Customer {
 
         try{
             this.cart.checkExpiryDates();
-            double total=cart.getTotal();
-            if (total>this.balance){
-                throw new IllegalStateException("Insufficient amount in your balance.");
-            }
-            this.balance-=total;
             HashMap<Shippable,Integer> shippableItems=cart.getShippableItems();
             if (!shippableItems.isEmpty()){
                 ship=new ShippingService(shippableItems);
             }
+            double subtotal=this.cart.getTotal();
+            double shippingFee=ship.getShippingFee();
+            double total=subtotal+shippingFee;
+            if (total>this.balance){
+                throw new IllegalStateException("Insufficient amount in your balance.");
+            }
+            this.balance-=total;
+
             System.out.println("CHECKOUT...");
             ship.displayShippingDetails();
             System.out.println("==================================");
 
             this.cart.displayCartItems();
-            double subtotal=this.cart.calculateTotal();
-            double shippingFee=ship.getShippingFee();
+
             System.out.println("==================================");
             System.out.println("Subtotal\t"+subtotal);
             System.out.println("Shipping\t"+shippingFee);
-            System.out.println("Amount\t"+(shippingFee+subtotal));
+            System.out.println("Amount\t"+total);
 
             cart.clear();
         }catch(IllegalStateException e){
