@@ -1,3 +1,5 @@
+import java.lang.System;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ public class Cart {
     }
 
     public Cart(){
-        this(null,0);
+        this(new HashMap<Product,Integer>(),0);
     }
 
     public double getTotal(){
@@ -21,5 +23,68 @@ public class Cart {
             total+=item.getKey().getPrice()*item.getValue();
         }
         return this.total;
+    }
+
+    public HashMap<Shippable,Integer> getShippableItems(){
+        //here is my list of shippable items that implement the shippable interface
+        HashMap<Shippable,Integer> shippableProducts= new HashMap<>();
+
+        for(Map.Entry<Product,Integer> item: cartItems.entrySet()){
+            if(item.getKey().isShippable()){
+                shippableProducts.put(new ShippableProduct(item.getKey()), item.getValue());
+            }
+        }
+        return shippableProducts;
+    }
+
+    public void add(Product product) {
+        try{
+            product.decrementQuantity();
+            cartItems.put(product, 1);
+        }catch(IllegalStateException e){
+            System.out.println(e.getMessage());
+        }
+
+    }
+    public void add(Product product, Integer quantity){
+        try{
+            product.decrementQuantity(quantity);
+            cartItems.put(product, quantity);
+        }catch(IllegalStateException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void remove(Product product) throws IllegalStateException{
+        if (!cartItems.containsKey(product)){
+            throw new IllegalStateException("Product is not in cart.");
+        }
+        cartItems.remove(product);
+        product.incrementQuantity(1);
+
+
+    }
+    public void remove(Product product,Integer quantity) throws IllegalStateException{
+        if (!cartItems.containsKey(product)){
+            throw new IllegalStateException("Product is not in cart.");
+        }
+        Integer oldQuantity=cartItems.get(product);
+        if((oldQuantity-quantity)<0){
+            throw new IllegalStateException("Quantity in cart is less than the quantity you want to remove");
+        }
+        else if ((oldQuantity-quantity)==0){
+            cartItems.remove(product);
+        }
+        else {
+            cartItems.put(product,oldQuantity-quantity);
+        }
+        product.incrementQuantity(quantity);
+    }
+    public void clear() {
+        cartItems.clear();
+        total = 0;
+    }
+    public boolean isEmpty(){
+        return cartItems.isEmpty();
     }
 }
