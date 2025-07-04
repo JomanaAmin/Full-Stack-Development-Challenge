@@ -87,4 +87,28 @@ public class Cart {
     public boolean isEmpty(){
         return cartItems.isEmpty();
     }
+
+    public void checkExpiryDates() throws IllegalStateException{
+        for(Map.Entry<Product,Integer> item: cartItems.entrySet()){
+            if(item.getKey().isExpirable()){
+                if(item.getKey().isExpired()){
+                    throw new IllegalStateException("The item: "+item.getKey().getName()+" has expired.");
+                }
+            }
+        }
+    }
+    public void displayCartItems(){
+        System.out.println("ITEMS IN CART:");
+
+        for(Map.Entry<Product,Integer> item: cartItems.entrySet()){
+            System.out.println(item.getValue()+"X "+item.getKey().getName()+"\t"+item.getKey().getPrice()*item.getValue()+" EGP");
+        }
+    }
+    public double calculateTotal(){
+        this.total=0;
+        for(Map.Entry<Product,Integer> item: cartItems.entrySet()){
+            this.total+=item.getKey().getPrice()*item.getValue();
+        }
+        return this.total;
+    }
 }
