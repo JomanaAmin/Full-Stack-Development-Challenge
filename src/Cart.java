@@ -25,6 +25,15 @@ public class Cart {
         return this.total;
     }
 
+
+    public boolean hasShippables(){
+        for(Map.Entry<Product,Integer> item: cartItems.entrySet()){
+            if(item.getKey().isShippable()){
+                return true;
+            }
+        }
+        return false;
+    }
     public HashMap<Shippable,Integer> getShippableItems(){
         //here is my list of shippable items that implement the shippable interface
         HashMap<Shippable,Integer> shippableProducts= new HashMap<>();
@@ -37,9 +46,25 @@ public class Cart {
         return shippableProducts;
     }
 
+    public void checkAllProductsStock() throws IllegalStateException{
+        for(Map.Entry<Product,Integer> item: cartItems.entrySet()){
+            if(item.getKey().getQuantity()<item.getValue()){
+                throw new IllegalStateException("Number of "+item.getKey().getName()+" in cart exceeds number in stock."+"("+item.getKey().getQuantity()+")");
+            }
+        }
+    }
+
+    public void reduceStock() {
+        for(Map.Entry<Product,Integer> item: cartItems.entrySet()){
+            item.getKey().decreaseStockBy(item.getValue());
+        }
+    }
+
+
+
     public void add(Product product) {
         try{
-            product.decrementQuantity();
+            product.checkAvailability();
             cartItems.put(product, 1);
         }catch(IllegalStateException e){
             System.out.println(e.getMessage());
@@ -48,7 +73,7 @@ public class Cart {
     }
     public void add(Product product, Integer quantity){
         try{
-            product.decrementQuantity(quantity);
+            product.checkAvailability(quantity);
             cartItems.put(product, quantity);
         }catch(IllegalStateException e){
             System.out.println(e.getMessage());
@@ -61,7 +86,6 @@ public class Cart {
             return;
         }
         cartItems.remove(product);
-        product.incrementQuantity(1);
     }
 
     public void remove(Product product,Integer quantity) {
@@ -71,7 +95,7 @@ public class Cart {
         }
         Integer oldQuantity=cartItems.get(product);
         if((oldQuantity-quantity)<0){
-            throw new IllegalStateException("Quantity in cart is less than the quantity you want to remove");
+            throw new IllegalStateException("Failed to add "+product.getName()+". Quantity in cart is less than the quantity you want to remove");
         }
         else if ((oldQuantity-quantity)==0){
             cartItems.remove(product);
@@ -79,7 +103,6 @@ public class Cart {
         else {
             cartItems.put(product,oldQuantity-quantity);
         }
-        product.incrementQuantity(quantity);
     }
     public void clear() {
         cartItems.clear();
@@ -88,12 +111,20 @@ public class Cart {
     public boolean isEmpty(){
         return cartItems.isEmpty();
     }
+//    public boolean hasInvalidQuantities(){
+//        for(Map.Entry<Product,Integer> item: cartItems.entrySet()){
+//            if(item.getValue()>item.getKey().getQuantity()){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     public void checkExpiryDates() throws IllegalStateException{
         for(Map.Entry<Product,Integer> item: cartItems.entrySet()){
             if(item.getKey().isExpirable()){
                 if(item.getKey().isExpired()){
-                    throw new IllegalStateException("The item: "+item.getKey().getName()+" has expired.");
+                    throw new IllegalStateException("The item: "+item.getKey().getName()+" has expired."+" Expiry date: "+item.getKey().getExpiryDate());
                 }
             }
         }

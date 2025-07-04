@@ -51,21 +51,21 @@ public class Product {
     public LocalDate getExpiryDate(){
         return expiryDate;
     }
-    public void decrementQuantity() throws IllegalStateException{
-        if (quantity < 0)
+    public void checkAvailability() throws IllegalStateException{
+        if (quantity <= 0)
             throw new IllegalStateException("Product is sold out.");
-        quantity--;
     }
-    public void decrementQuantity(Integer quantity) throws IllegalStateException{
+    public void checkAvailability(Integer quantity) throws IllegalStateException{
         if ((this.quantity-quantity) < 0)
-            throw new IllegalStateException("Quantity entered exceeds amount of "+this.name+" in stock.");
+            throw new IllegalStateException("Failed to add "+this.name+". Quantity entered exceeds amount of "+this.name+" in stock."+"("+this.quantity+")");
+    }
+
+    public void decreaseStockBy(Integer quantity){
         this.quantity-=quantity;
     }
 
     public boolean isExpired() {
         return expirable && expiryDate != null && LocalDate.now().isAfter(expiryDate);
     }
-    public void incrementQuantity(Integer quantity){
-        this.quantity+=quantity;
-    }
+
 }
